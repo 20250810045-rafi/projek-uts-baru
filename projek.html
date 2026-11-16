@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistem Konseling Terpadu</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- ================= LAYAR LOGIN ================= -->
+    <div id="login-screen" class="login-wrapper">
+        <div class="card login-card">
+            <div class="logo-container" style="margin-bottom: 25px; text-align: center;">
+                <!-- Logo telah dipindahkan ke dalam kartu login agar lebih rapi -->
+                <img src="img/logo.png" 
+                     alt="Logo SMA" 
+                     class="logo-sekolah" 
+                     style="width: 90px; height: auto; margin-bottom: 15px;">
+                
+                <h2 style="color: #2c3e50; margin: 0;">Portal Konseling</h2>
+                <p style="margin: 5px 0 0 0; color: #7f8c8d;">SMA Negeri 1 Talaga</p>
+            </div>
+            
+            <form id="formLogin">
+                <div class="input-group">
+                    <label>Username</label>
+                    <input type="text" id="username" class="form-input" placeholder="Masukkan username / NISN" required>
+                </div>
+                <div class="input-group">
+                    <label>Password</label>
+                    <input type="password" id="password" class="form-input" placeholder="Masukkan password" required>
+                </div>
+                <button type="submit" class="btn-primary" style="width: 100%; margin-top: 10px;">Masuk</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- ================= APLIKASI UTAMA ================= -->
+    <div class="app-container" id="main-app" style="display: none;">
+        
+        <aside class="sidebar">
+            <div class="logo-container" style="margin-bottom: 30px; text-align: center;">
+               <img src="img/logo.png" alt="Logo SMA" class="logo-sekolah" style="width: 80px; height: auto; margin-bottom: 15px;">
+                     alt="Logo Sidebar" 
+                     style="width: 50px; height: auto; margin-bottom: 10px;">
+                <h2 style="margin: 0; color: white;">BK SMA</h2>
+                <p id="nama-user-sidebar" style="font-size: 14px; margin-top: 5px; color: #3498db;"></p>
+            </div>
+
+            <ul class="nav-menu" id="menu-siswa" style="display: none;">
+                <li><button class="nav-btn active" onclick="bukaMenu('beranda-siswa', event)">Beranda Siswa</button></li>
+                <li><button class="nav-btn" onclick="bukaMenu('isi-mood', event)">Isi Mood Harian</button></li>
+                <li><button class="nav-btn" onclick="bukaMenu('panel-refleksi', event)">Lembar Refleksi Diri</button></li>
+                <li><button class="nav-btn" onclick="bukaMenu('refleksi', event)">Konsultasi Masalah</button></li>
+            </ul>
+
+            <ul class="nav-menu" id="menu-bk" style="display: none;">
+                <li><button class="nav-btn active" onclick="bukaMenu('dashboard-bk', event)">Dashboard BK</button></li>
+                <li><button class="nav-btn" onclick="bukaMenu('data-mood', event)">Pantau Mood Siswa</button></li>
+                <li><button class="nav-btn" onclick="bukaMenu('laporan-global', event)">Aksi & Laporan</button></li>
+            </ul>
+
+            <ul class="nav-menu" id="menu-kepsek" style="display: none;">
+                <li><button class="nav-btn active" onclick="bukaMenu('dashboard-kepsek', event)">Ringkasan Eksekutif</button></li>
+                <li><button class="nav-btn" onclick="bukaMenu('data-mood-kepsek', event)">Laporan Kondisi Siswa</button></li>
+            </ul>
+
+            <div style="position: absolute; bottom: 20px; width: 210px;">
+                <button class="btn-secondary" style="width: 100%; background-color: #e74c3c; color: white; border: none; padding: 10px; border-radius: 5px; cursor: pointer;" onclick="logout()">Keluar</button>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <!-- ====== KONTEN: SISWA ====== -->
+            <section id="beranda-siswa" class="content-section">
+                <h1>Selamat Datang, <span id="nama-siswa-teks"></span></h1>
+                <div class="card">
+                    <h3>Status Hari Ini</h3>
+                    <p>Silakan isi kondisi perasaan (mood) Anda hari ini pada menu "Isi Mood Harian".</p>
+                </div>
+            </section>
+
+            <section id="isi-mood" class="content-section">
+                <h1>Isi Mood Harian</h1>
+                <div class="card">
+                    <form id="formMood">
+                        <div class="radio-group" style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px;">
+                            <label><input type="radio" name="mood" value="Sangat Baik" required> Sangat Baik 😁</label>
+                            <label><input type="radio" name="mood" value="Baik"> Baik 🙂</label>
+                            <label><input type="radio" name="mood" value="Biasa Saja"> Biasa Saja 😐</label>
+                            <label><input type="radio" name="mood" value="Buruk"> Buruk ☹️</label>
+                            <label><input type="radio" name="mood" value="Sangat Buruk"> Sangat Buruk 😭</label>
+                        </div>
+                        <button type="submit" class="btn-primary">Simpan Mood</button>
+                    </form>
+                </div>
+            </section>
+            <section id="panel-refleksi" class="content-section">
+                <div class="card" style="background-color: #fdfbf7; border: 1px solid #e1d8c1;">
+                    <h3 style="text-align: center; margin-bottom: 30px; font-weight: normal; color: #2c3e50; text-transform: uppercase;">
+                        Lembar Refleksi Diri
+                    </h3>
+                    
+                    <form id="formRefleksiDiri" style="max-width: 800px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px;">
+                        
+                        <div style="display: flex; flex-direction: column; gap: 8px;">
+                            <label style="font-weight: bold; color: #34495e;">1. Apa hal yang paling kamu sukai dari dirimu?</label>
+                            <textarea id="ref-1" rows="3" class="form-input" style="resize: vertical;" required placeholder="Ceritakan di sini..."></textarea>
+                        </div>
+
+                        <div style="display: flex; flex-direction: column; gap: 8px;">
+                            <label style="font-weight: bold; color: #34495e;">2. Apa yang membuatmu merasa bangga?</label>
+                            <textarea id="ref-2" rows="3" class="form-input" style="resize: vertical;" required placeholder="Ceritakan di sini..."></textarea>
+                        </div>
+
+                        <div style="display: flex; flex-direction: column; gap: 8px;">
+                            <label style="font-weight: bold; color: #34495e;">3. Kebiasaan baik apa yang sudah kamu lakukan untuk dirimu?</label>
+                            <textarea id="ref-3" rows="3" class="form-input" style="resize: vertical;" required placeholder="Ceritakan di sini..."></textarea>
+                        </div>
+
+                        <div style="display: flex; flex-direction: column; gap: 8px;">
+                            <label style="font-weight: bold; color: #34495e;">4. Apa hal kecil yang bisa kamu lakukan hari ini untuk mencintai dirimu lebih baik?</label>
+                            <textarea id="ref-4" rows="3" class="form-input" style="resize: vertical;" required placeholder="Ceritakan di sini..."></textarea>
+                        </div>
+
+                        <div style="display: flex; flex-direction: column; gap: 8px;">
+                            <label style="font-weight: bold; color: #34495e;">5. Tuliskan afirmasi positif untuk dirimu!</label>
+                            <textarea id="ref-5" rows="3" class="form-input" style="resize: vertical;" required placeholder="Contoh: Aku adalah seseorang yang berharga..."></textarea>
+                        </div>
+                        
+                        <div style="margin-top: 15px; text-align: right;">
+                            <button type="submit" class="btn-primary" style="background-color: #27ae60; padding: 12px 30px; font-size: 15px;">Simpan Jurnal Refleksi</button>
+                        </div>
+                    </form>
+                </div>
+            </section>
+            <section id="refleksi" class="content-section">
+                <div class="card-form card">
+                    <h3 class="form-header">
+                        Konsultasikan Masalah Kamu :)
+                    </h3>
+                    <form id="formKonsultasi">
+                        
+                        <div class="form-group" style="margin-bottom: 15px;">
+                            <label>Halo :</label>
+                            <div class="form-control" style="background-color: #e2e8f0; font-weight: 500; padding: 10px; border-radius: 4px;">
+                                <span id="label-nama-konsultasi">Nama Remaja</span>
+                            </div>
+                        </div>
+
+                        <div class="form-group" style="margin-bottom: 15px;">
+                            <label>Usia</label>
+                            <input type="number" id="usia" class="form-control" style="width: 100%; padding: 8px;" required>
+                        </div>
+
+                        <div class="form-group" style="margin-bottom: 15px;">
+                            <label>Apa Permasalahan Anda</label>
+                            <select id="kategori-masalah" class="form-control" style="width: 100%; padding: 8px;" required>
+                                <option value="Stres Karena Belajar / Ujian">Stres Karena Belajar / Ujian</option>
+                                <option value="Masalah Pertemanan">Masalah Pertemanan</option>
+                                <option value="Masalah Keluarga">Masalah Keluarga</option>
+                                <option value="Bullying / Perundungan">Bullying / Perundungan</option>
+                                <option value="Lainnya">Lainnya...</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group" style="margin-bottom: 15px;">
+                            <label>Tingkat Beban</label>
+                            <div class="radio-options" style="display: flex; gap: 15px; margin-top: 5px;">
+                                <label><input type="radio" name="beban" value="Ringan" required> Ringan</label>
+                                <label><input type="radio" name="beban" value="Sedang"> Sedang</label>
+                                <label><input type="radio" name="beban" value="Berat"> Berat</label>
+                            </div>
+                        </div>
+
+                        <div class="form-group" style="margin-bottom: 15px;">
+                            <label>Ceritakan Masalah Kamu</label>
+                            <textarea id="cerita-masalah" rows="6" class="form-control" style="width: 100%; padding: 8px; resize: vertical;" required placeholder="Tuliskan masalah yang sedang kamu hadapi..."></textarea>
+                        </div>
+
+                        <div class="form-action" style="display: flex; gap: 10px; margin-top: 20px;">
+                            <button type="button" class="btn-secondary" id="btn-anonim" onclick="toggleAnonim()">Anonimkan Nama</button>
+                            <button type="reset" class="btn-secondary">Reset</button>
+                            <button type="submit" class="btn-primary">Kirim</button>
+                        </div>
+
+                    </form>
+                </div>
+            </section>
+
+            <!-- ====== KONTEN: GURU BK ====== -->
+            <section id="dashboard-bk" class="content-section">
+                <h1>Dashboard Konselor</h1>
+                <div style="display: flex; gap: 20px; margin-bottom: 20px;">
+                    <div class="card" style="flex: 1; border-left: 5px solid #3498db;">
+                        <h3>Total Siswa</h3>
+                        <h2 id="bk-total" style="font-size: 36px; margin-top: 10px;">0</h2>
+                    </div>
+                    <div class="card" style="flex: 1; border-left: 5px solid #e74c3c;">
+                        <h3>Perlu Perhatian</h3>
+                        <h2 id="bk-buruk" style="font-size: 36px; margin-top: 10px;">0</h2>
+                    </div>
+                    <div class="card" style="flex: 1; border-left: 5px solid #2ecc71;">
+                        <h3>Sudah Mengisi</h3>
+                        <h2 id="bk-mengisi" style="font-size: 36px; margin-top: 10px;">0</h2>
+                    </div>
+                </div>
+                <div class="card" style="background-color: #f8f9fa;">
+                    <h3>Analisis Persentase Hari Ini</h3>
+                    <p id="bk-persentase" style="margin-top: 10px; line-height: 1.6;">Memuat data...</p>
+                </div>
+            </section>
+
+            <section id="data-mood" class="content-section">
+                <h1>Data Pemantauan Mood Siswa</h1>
+                <div class="card">
+                    <div id="rekap-mood-bk" style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 20px;"></div>
+                    <table class="data-table" style="width: 100%; text-align: left; border-collapse: collapse;">
+                        <thead>
+                            <tr style="background-color: #f2f2f2;">
+                                <th style="padding: 10px; border-bottom: 1px solid #ddd;">NISN</th>
+                                <th style="padding: 10px; border-bottom: 1px solid #ddd;">Nama Siswa</th>
+                                <th style="padding: 10px; border-bottom: 1px solid #ddd;">Kelas</th>
+                                <th style="padding: 10px; border-bottom: 1px solid #ddd;">Mood Hari Ini</th>
+                                <th style="padding: 10px; border-bottom: 1px solid #ddd;">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabel-mood-body"></tbody>
+                    </table>
+                </div>
+            </section>
+
+           <section id="laporan-global" class="content-section">
+                <h1>Aksi & Laporan</h1>
+                <div class="card" style="margin-bottom: 20px; border-left: 5px solid #27ae60;">
+                    <h3>Kirim Laporan ke Kepala Sekolah</h3>
+                    <p style="margin: 10px 0;">Pastikan semua data hari ini sudah divalidasi sebelum dikirim ke dasbor Kepala Sekolah.</p>
+                    <button class="btn-primary" style="background-color: #27ae60;" onclick="kirimLaporanKepsek()">Kirim Laporan Hari Ini</button>
+                </div>
+
+                <!-- PANEL HASIL KONSULTASI MASUK -->
+                <div class="card" style="margin-bottom: 20px; border-left: 5px solid #3498db;">
+                    <h3>Daftar Permintaan Konsultasi Masuk</h3>
+                    <table class="data-table" style="width: 100%; text-align: left; border-collapse: collapse;">
+                        <thead>
+                            <tr style="background-color: #f2f2f2;">
+                                <th style="padding: 10px; border-bottom: 1px solid #ddd;">Nama Pengirim</th>
+                                <th style="padding: 10px; border-bottom: 1px solid #ddd;">Usia</th>
+                                <th style="padding: 10px; border-bottom: 1px solid #ddd;">Kategori Masalah</th>
+                                <th style="padding: 10px; border-bottom: 1px solid #ddd;">Tingkat Beban</th>
+                                <th style="padding: 10px; border-bottom: 1px solid #ddd;">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabel-konsultasi-masuk">
+                            <!-- Data akan disuntik dari JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- PANEL HASIL REFLEKSI DIRI -->
+                <div class="card" style="margin-bottom: 20px; border-left: 5px solid #9b59b6;">
+                    <h3>Jurnal Refleksi Diri Siswa</h3>
+                    <table class="data-table" style="width: 100%; text-align: left; border-collapse: collapse;">
+                        <thead>
+                            <tr style="background-color: #f2f2f2;">
+                                <th style="padding: 10px; border-bottom: 1px solid #ddd;">NISN</th>
+                                <th style="padding: 10px; border-bottom: 1px solid #ddd;">Nama Siswa</th>
+                                <th style="padding: 10px; border-bottom: 1px solid #ddd;">Status Jurnal</th>
+                                <th style="padding: 10px; border-bottom: 1px solid #ddd;">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabel-refleksi-masuk">
+                            <!-- Data akan disuntik dari JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- ====== KONTEN: KEPALA SEKOLAH ====== -->
+            <section id="dashboard-kepsek" class="content-section">
+                <h1>Ringkasan Eksekutif Pimpinan</h1>
+                <div style="display: flex; gap: 20px; margin-bottom: 20px;">
+                    <div class="card" style="flex: 1; border-left: 5px solid #8e44ad;">
+                        <h3>Total Siswa Terdaftar</h3>
+                        <h2 id="kepsek-total" style="font-size: 36px; margin-top: 10px;">-</h2>
+                    </div>
+                    <div class="card" style="flex: 1; border-left: 5px solid #c0392b;">
+                        <h3>Kasus Kritis (Sangat Buruk)</h3>
+                        <h2 id="kepsek-kritis" style="font-size: 36px; margin-top: 10px;">-</h2>
+                    </div>
+                    <div class="card" style="flex: 1; border-left: 5px solid #f39c12;">
+                        <h3>Tingkat Partisipasi Harian</h3>
+                        <h2 id="kepsek-partisipasi" style="font-size: 36px; margin-top: 10px;">-</h2>
+                    </div>
+                </div>
+                <div class="card" style="background-color: #f4f6f7;">
+                    <h3>Laporan Status Mental Sekolah</h3>
+                    <p id="kepsek-kesimpulan" style="margin-top: 10px; line-height: 1.6;">Memuat data...</p>
+                </div>
+            </section>
+
+            <section id="data-mood-kepsek" class="content-section">
+                <h1>Laporan Harian Kondisi Mental Siswa</h1>
+                <div class="card">
+                    <div id="rekap-mood-kepsek" style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 20px;"></div>
+                    <table class="data-table" style="width: 100%; text-align: left; border-collapse: collapse;">
+                        <thead>
+                            <tr style="background-color: #f2f2f2;">
+                                <th style="padding: 10px; border-bottom: 1px solid #ddd;">NISN</th>
+                                <th style="padding: 10px; border-bottom: 1px solid #ddd;">Nama Siswa</th>
+                                <th style="padding: 10px; border-bottom: 1px solid #ddd;">Kelas</th>
+                                <th style="padding: 10px; border-bottom: 1px solid #ddd;">Kondisi (Mood)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabel-mood-kepsek"></tbody>
+                    </table>
+                </div>
+                
+                <!-- Tabel Laporan Konsultasi Masuk untuk Kepsek -->
+                <div class="card" style="margin-top: 20px;">
+                    <h3>Laporan Permintaan Konsultasi Siswa</h3>
+                    <table class="data-table" style="width: 100%; text-align: left; border-collapse: collapse;">
+                        <thead>
+                            <tr style="background-color: #f2f2f2;">
+                                <th style="padding: 10px; border-bottom: 1px solid #ddd;">Nama Pengirim</th>
+                                <th style="padding: 10px; border-bottom: 1px solid #ddd;">Usia</th>
+                                <th style="padding: 10px; border-bottom: 1px solid #ddd;">Kategori Masalah</th>
+                                <th style="padding: 10px; border-bottom: 1px solid #ddd;">Tingkat Beban</th>
+                                <th style="padding: 10px; border-bottom: 1px solid #ddd;">Aksi / Detail</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabel-konsultasi-kepsek">
+                            <tr>
+                                <td colspan="5" style="text-align:center; padding:15px; font-style:italic; color:#e67e22;">Menunggu laporan dari Guru BK...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Tabel Laporan Jurnal Refleksi untuk Kepsek -->
+                <div class="card" style="margin-top: 20px;">
+                    <h3>Laporan Jurnal Refleksi Diri Siswa</h3>
+                    <table class="data-table" style="width: 100%; text-align: left; border-collapse: collapse;">
+                        <thead>
+                            <tr style="background-color: #f2f2f2;">
+                                <th style="padding: 10px; border-bottom: 1px solid #ddd;">NISN</th>
+                                <th style="padding: 10px; border-bottom: 1px solid #ddd;">Nama Siswa</th>
+                                <th style="padding: 10px; border-bottom: 1px solid #ddd;">Status Jurnal</th>
+                                <th style="padding: 10px; border-bottom: 1px solid #ddd;">Aksi / Detail</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabel-refleksi-kepsek">
+                            <tr>
+                                <td colspan="4" style="text-align:center; padding:15px; font-style:italic; color:#e67e22;">Menunggu laporan dari Guru BK...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- MODAL DETAIL UNTUK GURU BK -->
+    <div id="modal-detail" class="modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); align-items: center; justify-content: center;">
+        <div class="card modal-content" style="width: 500px; max-width: 90%;">
+            <h2 id="modal-nama" style="margin-bottom: 5px; color: #2c3e50;">Nama Siswa</h2>
+            <p style="color: #7f8c8d; margin-bottom: 15px;">Kelas: <span id="modal-kelas"></span> | Mood: <b id="modal-mood"></b></p>
+            
+            <h4 style="border-bottom: 1px solid #ddd; padding-bottom: 5px; margin-bottom: 10px;">Pesan Konsultasi:</h4>
+            <div id="modal-konsultasi-data" style="background: #f9f9f9; padding: 15px; border-radius: 5px; font-size: 14px; line-height: 1.6;">
+                <!-- Data disuntik oleh JS -->
+            </div>
+            
+            <button class="btn-secondary" style="margin-top: 20px; width: 100%; padding: 10px; border: none; cursor: pointer;" onclick="tutupModal()">Tutup</button>
+        </div>
+    </div>
+
+    <!-- MODAL DETAIL REFLEKSI UNTUK GURU BK -->
+    <div id="modal-refleksi" class="modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); align-items: center; justify-content: center;">
+        <div class="card modal-content" style="width: 600px; max-width: 90%; max-height: 90vh; overflow-y: auto;">
+            <h2 id="modal-nama-refleksi" style="margin-bottom: 5px; color: #2c3e50;">Nama Siswa</h2>
+            <p style="color: #7f8c8d; margin-bottom: 15px;">Membaca Jurnal Refleksi Diri</p>
+            
+            <div id="modal-refleksi-data" style="background: #fdfbf7; padding: 15px; border: 1px solid #e1d8c1; border-radius: 5px; font-size: 14px; line-height: 1.6;">
+                <!-- Data disuntik oleh JS -->
+            </div>
+            
+            <button class="btn-secondary" style="margin-top: 20px; width: 100%; padding: 10px; border: none; cursor: pointer;" onclick="tutupModalRefleksi()">Tutup Jurnal</button>
+        </div>
+    </div>
+
+    <script src="js/script.js"></script>
+</body>
+</html>
